@@ -1,7 +1,7 @@
 package com.example.comfortsoft.service;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ExcelReaderService {
-    List<Integer> readIntegersFromFirstColumn(String filePath);
+    Set<Integer> readIntegersFromFirstColumn(String filePath);
 }

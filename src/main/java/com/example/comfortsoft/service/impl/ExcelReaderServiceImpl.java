@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ExcelReaderServiceImpl implements ExcelReaderService {
@@ -19,12 +19,12 @@ public class ExcelReaderServiceImpl implements ExcelReaderService {
     private static final String XLSX_FILE_FORMAT = ".xlsx";
 
     @Override
-    public List<Integer> readIntegersFromFirstColumn(String filePath) {
+    public Set<Integer> readIntegersFromFirstColumn(String filePath) {
 
         if (!isValidFileFormat(filePath)) {
             throw new FileFormatException("Incorrect file format. The xlsx format is required.");
         }
-        List<Integer> numbers = new ArrayList<>();
+        Set<Integer> numbers = new HashSet<>();
         try (FileInputStream fis = new FileInputStream(filePath);
 
              Workbook workbook = new XSSFWorkbook(fis)) {

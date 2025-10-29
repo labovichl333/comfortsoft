@@ -3,7 +3,6 @@ package com.example.comfortsoft.service.impl;
 import com.example.comfortsoft.service.NumberSearchService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -12,36 +11,34 @@ public class QuickNumberSearchService implements NumberSearchService {
     private final Random random = new Random();
 
     @Override
-    public int searchKMinNumber(List<Integer> list, int k) {
-        if (k < 1 || k > list.size()) {
+    public int searchKMinNumber(int[] arr, int k) {
+        if (k < 1 || k > arr.length) {
             throw new IllegalArgumentException("k must be between 1 and list size");
         }
-        return quickSelect(list, 0, list.size() - 1, k - 1);
+        return quickSelect(arr, 0, arr.length - 1, k - 1);
     }
 
-    private int quickSelect(List<Integer> arr, int left, int right, int k) {
-        if (left == right) {
-            return arr.get(left);
+    private int quickSelect(int[] arr, int left, int right, int k) {
+        while (left < right) {
+            int pivotIndex = random.nextInt(right - left + 1) + left;
+            pivotIndex = partition(arr, left, right, pivotIndex);
+            if (k == pivotIndex) {
+                return arr[k];
+            } else if (k < pivotIndex) {
+                right = pivotIndex - 1;
+            } else {
+                left = pivotIndex + 1;
+            }
         }
-
-        int pivotIndex = random.nextInt(right - left + 1) + left;
-        pivotIndex = partition(arr, left, right, pivotIndex);
-
-        if (k == pivotIndex) {
-            return arr.get(k);
-        } else if (k < pivotIndex) {
-            return quickSelect(arr, left, pivotIndex - 1, k);
-        } else {
-            return quickSelect(arr, pivotIndex + 1, right, k);
-        }
+        return arr[left];
     }
 
-    private int partition(List<Integer> arr, int left, int right, int pivotIndex) {
-        int pivotValue = arr.get(pivotIndex);
+    private int partition(int[] arr, int left, int right, int pivotIndex) {
+        int pivotValue = arr[pivotIndex];
         swap(arr, pivotIndex, right);
         int storeIndex = left;
         for (int i = left; i < right; i++) {
-            if (arr.get(i) < pivotValue) {
+            if (arr[i] < pivotValue) {
                 swap(arr, storeIndex, i);
                 storeIndex++;
             }
@@ -50,9 +47,9 @@ public class QuickNumberSearchService implements NumberSearchService {
         return storeIndex;
     }
 
-    private void swap(List<Integer> arr, int i, int j) {
-        int temp = arr.get(i);
-        arr.set(i, arr.get(j));
-        arr.set(j, temp);
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }

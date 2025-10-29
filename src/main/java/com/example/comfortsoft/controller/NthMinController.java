@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 @Tag(name = "N-th Minimum Finder", description = "Find the N-th smallest integer in an Excel file")
@@ -41,7 +39,9 @@ public class NthMinController {
 
         validateInputs(filePath, n);
 
-        List<Integer> numbers = excelReaderServiceImpl.readIntegersFromFirstColumn(filePath);
+        int[] numbers = excelReaderServiceImpl.readIntegersFromFirstColumn(filePath).stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
 
         validateNumbersCount(numbers, n);
 
@@ -59,11 +59,11 @@ public class NthMinController {
         }
     }
 
-    private void validateNumbersCount(List<Integer> numbers, int n) {
-        if (numbers == null || numbers.isEmpty()) {
+    private void validateNumbersCount(int[] numbers, int n) {
+        if (numbers.length == 0) {
             throw new InvalidInputException("The file does not contain any numbers");
         }
-        if (n > numbers.size()) {
+        if (n > numbers.length) {
             throw new InvalidInputException("N must not exceed the total number of integers in the file");
         }
     }
